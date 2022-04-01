@@ -1,12 +1,11 @@
 import logging
 import os
-import re
 
 import requests
 from lxml import etree
-from tools.Log import Log
+
 from domain.Book import Book
-from domain.Chapter import Chapter
+from tools.Log import Log
 
 
 class CrawlPopular:
@@ -95,7 +94,7 @@ class CrawlPopular:
         book.setStatus(status)
         book.setDescription(description)
 
-        print(urls)
+        # print(urls)
         # print(title)
         # print(status)
         # print(hot)
@@ -103,7 +102,7 @@ class CrawlPopular:
         # print(book.toString())
 
         for i in range(len(urls)):
-            # self.getChapter('https://www.hetushu.com/' + urls[i], book, chapter)
+            self.getChapter(url + urls[i], book)
             break
 
     def getChapter(self, url, book):
@@ -143,11 +142,3 @@ class CrawlPopular:
         except:
             log.log(target='download', level=logging.ERROR, msg=url + '下载失败')
         return path
-
-# if __name__ == '__main__':
-# url = 'https://www.hetushu.com/top/index.php'
-# print(getHtml(url))
-# getBooks(url)
-# getBook('https://www.bbiquge.net/book_107755/')
-# url = 'https://www.bbiquge.net/book_132488/53726615.html'
-# getChapter(url, None, None)

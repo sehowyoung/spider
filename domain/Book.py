@@ -27,7 +27,7 @@ class Book:
 
     def setAllList(self, num):
         self.allList = num
-        
+
     def setStatus(self, status):
         self.status = status
 
