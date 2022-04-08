@@ -4,7 +4,7 @@ class Book:
         self.hot = None
         self.status = None
         self.allList = None
-        self.chapters = None
+        self.chapters = []
         self.description = None
         self.name = name
         self.category = category
@@ -37,6 +37,9 @@ class Book:
     def setCover(self, cover):
         self.cover = cover
 
-    def toString(self):
+    def get_chapter(self):
+        return self.chapters
+
+    def tostring(self):
         print(self.name, self.category, self.author, self.word, self.recommend, self.update, self.hot, self.status,
               self.allList, self.cover, self.description)
