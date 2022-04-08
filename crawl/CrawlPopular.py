@@ -1,7 +1,10 @@
 import logging
 import os
 import re
+import time
 from concurrent import futures
+from concurrent.futures import wait
+from concurrent.futures._base import ALL_COMPLETED
 
 import chardet
 import requests
@@ -65,21 +68,20 @@ def get_chapter(url, book):
     chapter = Chapter(id, name, content)
     book.addChapter(chapter)
     print("第" + id + "章" + "爬取成功")
-    try:
-        if not os.path.exists("doc/books/" + book.name):
-            os.makedirs('doc/books/' + book.name)
-        for chapter in book.get_chapter():
-            # print(chapter.tostring())
-            # print(chapter.get_id(), chapter.get_name())
-            path = 'doc/books/' + book.name + '/' + chapter.get_id() + chapter.get_name() + '.txt'
-            print(path)
-            with open(path, 'w+') as file:
-                for text in chapter.get_content():
-                    file.write(text + '\n')
-                file.close()
-                print(path + '------------写入成功')
-    except:
-        log.log(target='reptile', level=logging.ERROR, msg="爬取小说《" + book.name + "》失败")
+    # try:
+    #     if not os.path.exists("doc/books/" + book.name):
+    #         os.makedirs('doc/books/' + book.name)
+    #     for chapter in book.get_chapter():
+    #         # print(chapter.tostring())
+    #         # print(chapter.get_id(), chapter.get_name())
+    #         path = 'doc/books/' + book.name + '/' + chapter.get_id() + chapter.get_name() + '.txt'
+    #         with open(path, 'w+') as file:
+    #             for text in chapter.get_content():
+    #                 file.write(text + '\n')
+    #             file.close()
+    #             print(path + '------------写入成功')
+    # except:
+    #     log.log(target='reptile', level=logging.ERROR, msg="爬取小说《" + book.name + "》失败")
 
 
 def get_book(url, book):
@@ -98,7 +100,7 @@ def get_book(url, book):
     book.setStatus(status)
     book.setDescription(description)
 
-    # print(urls)
+    # print(len(urls), urls[-1])
     # print(title)
     # print(status)
     # print(hot)
@@ -112,28 +114,29 @@ def get_book(url, book):
 
     # print(book.get_chapter())
 
-    executor = futures.ThreadPoolExecutor(max_workers=500)
+    # 使用线程池爬取
+    future_list = []
+    executor = futures.ThreadPoolExecutor(max_workers=128)
     for i in range(len(urls)):
         fs = executor.submit(get_chapter, url + urls[i], book)
-    futures.wait(fs)
+        future_list.append(fs)
+    futures.wait(future_list)
     print("*****************多线程已完成******************")
     print(len(book.get_chapter()))
 
-    # try:
-    #     if not os.path.exists("doc/books/" + book.name):
-    #         os.makedirs('doc/books/' + book.name)
-    #     for chapter in book.get_chapter():
-    #         # print(chapter.tostring())
-    #         # print(chapter.get_id(), chapter.get_name())
-    #         path = 'doc/books/' + book.name + '/' + chapter.get_id() + chapter.get_name() + '.txt'
-    #         print(path)
-    #         with open(path, 'w+') as file:
-    #             for text in chapter.get_content():
-    #                 file.write(text + '\n')
-    #             file.close()
-    #             print(path + '------------写入成功')
-    # except:
-    #     log.log(target='reptile', level=logging.ERROR, msg="爬取小说《" + book.name + "》失败")
+    # 输出到文本
+    try:
+        if not os.path.exists("doc/books/" + book.name):
+            os.makedirs('doc/books/' + book.name)
+        for chapter in book.get_chapter():
+            path = 'doc/books/' + book.name + '/' + chapter.get_id() + chapter.get_name() + '.txt'
+            with open(path, 'w+') as file:
+                for text in chapter.get_content():
+                    file.write(text + '\n')
+                file.close()
+                print(path + '------------写入成功')
+    except:
+        log.log(target='reptile', level=logging.ERROR, msg="爬取小说《" + book.name + "》失败")
 
 
 def get_books(url, attr):
