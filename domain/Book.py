@@ -3,7 +3,7 @@ class Book:
         self.cover = None
         self.hot = None
         self.status = None
-        self.allList = None
+        self.attribute = None
         self.chapters = []
         self.description = None
         self.name = name
@@ -13,28 +13,28 @@ class Book:
         self.recommend = recommend
         self.update = update
 
-    def setDescription(self, description):
+    def set_description(self, description):
         self.description = description
 
-    def setCategory(self, category):
+    def set_category(self, category):
         self.category = category
 
-    def setWord(self, word):
+    def set_word(self, word):
         self.word = word
 
-    def addChapter(self, chapter):
+    def add_chapter(self, chapter):
         self.chapters.append(chapter)
 
-    def setAllList(self, num):
-        self.allList = num
+    def add_attribute(self, attr):
+        self.attribute = attr
 
-    def setStatus(self, status):
+    def set_status(self, status):
         self.status = status
 
-    def setHot(self, hot):
+    def set_hot(self, hot):
         self.hot = hot
 
-    def setCover(self, cover):
+    def set_cover(self, cover):
         self.cover = cover
 
     def get_chapter(self):
@@ -42,4 +42,4 @@ class Book:
 
     def tostring(self):
         print(self.name, self.category, self.author, self.word, self.recommend, self.update, self.hot, self.status,
-              self.allList, self.cover, self.description)
+              self.attribute, self.cover, self.description)
