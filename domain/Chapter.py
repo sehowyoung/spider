@@ -1,8 +1,11 @@
 class Chapter:
-    def __init__(self, id, name, content):
-        self.id = id
+    def __init__(self, name, content):
+        self.id = None
         self.name = name
         self.content = content
+
+    def set_id(self, id):
+        self.id = id
 
     def get_id(self):
         return self.id
